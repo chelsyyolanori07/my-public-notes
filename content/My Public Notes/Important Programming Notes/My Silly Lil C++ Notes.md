@@ -525,3 +525,302 @@ Output:
 BMW X5 1999  
 Ford Mustang 1969
 ```
+
+## Garis Besar Konversi Antar Basis Angka
+
+1. **Biner (basis 2) → Desimal (basis 10)**
+    
+    - Prinsip: kalikan setiap digit biner dengan 2n2^n2n sesuai posisinya, lalu jumlahkan.
+        
+    - Intinya: biner dibaca sebagai jumlah pangkat dua.
+        
+2. **Desimal (basis 10) → Biner (basis 2)**
+    
+    - Prinsip: bagi berulang dengan 2, catat sisanya, lalu baca sisa dari bawah ke atas.
+        
+    - Intinya: desimal dipecah menjadi kombinasi pangkat dua.
+        
+3. **Desimal (basis 10) → Heksadesimal (basis 16)**
+    
+    - Prinsip: bagi berulang dengan 16, catat sisanya, lalu baca dari bawah ke atas.
+        
+    - Intinya: desimal dipecah menjadi kombinasi pangkat enam belas.
+        
+4. **Desimal (basis 10) → Oktal (basis 8)**
+    
+    - Prinsip: bagi berulang dengan 8, catat sisanya, lalu baca dari bawah ke atas.
+        
+    - Intinya: desimal dipecah menjadi kombinasi pangkat delapan.
+        
+5. **Biner ↔ Heksadesimal**
+    
+    - Prinsip: 1 digit hex = 4 digit biner. Jadi cukup kelompokkan biner per 4 bit.
+        
+    - Intinya: ini konversi paling cepat karena langsung berpadanan.
+        
+6. **Biner ↔ Oktal**
+    
+    - Prinsip: 1 digit oktal = 3 digit biner. Jadi kelompokkan biner per 3 bit.
+
+![[Pasted image 20251014003413.png]]
+
+![[Pasted image 20251014003438.png]]
+
+![[Pasted image 20251014003537.png]]
+
+![[Pasted image 20251014003626.png]]
+
+![[Pasted image 20251014003704.png]]
+
+![[Pasted image 20251014003734.png]]
+
+-  Jadi, semua konversi itu intinya:
+	- **Biner ke basis lain** → pakai pangkat 2 atau grouping.
+	- **Desimal ke basis lain** → pakai pembagian berulang.
+	- **Basis lain ke desimal** → pakai perkalian pangkat.
+
+- Pemanggilan fungsi simple rules
+	- **Fungsi `void`** → panggil langsung: `namaFungsi(parameter);`
+	- **Fungsi return value** → bisa di cout: `cout << namaFungsi(parameter) << endl;`
+
+- Pointer = tipe data yang berisi alamat memori
+```cpp
+int main() {
+    int x;
+    int *y = &x;
+
+    cout << "Masukkan nilai variabel x: "; cin >> x;
+    cout << endl;
+
+    cout << "Nilai variabel x adalah: " << x << endl; //17
+    cout << "Alamat dari variabel x adalah: " << &x << endl; // x memory
+    cout << "Isi dari variabel y adalah: " << y << endl; //x memory
+    cout << "Alamat dari variabel y adalah: " << &y << endl; //y memory
+    cout << "Nilai yang tercantum dalam y adalah: " << *y << endl; // nilai x = 17
+
+}
+```
+
+- Singly linked list
+```cpp
+// ==============================================
+// VISUALISASI SINGLE LINKED LIST OPERATIONS
+// ==============================================
+
+// FUNGSI INSERT FIRST - SINGLE LINKED LIST
+void insertFirst(pointer &first, pointer pBaru) {
+    if (first == NULL) {
+        first = pBaru;
+    } else {
+        pBaru->next = first;
+        first = pBaru;
+    }
+}
+
+/*
+VISUALISASI INSERT FIRST:
+Sebelum: [A] → [B] → [C] → NULL
+         ↑
+        first
+
+Insert [NEW] di first:
+pBaru->next = first;    // [NEW] → [A] → [B] → [C] → NULL
+first = pBaru;          // first = [NEW]
+
+Hasil: [NEW] → [A] → [B] → [C] → NULL
+         ↑
+        first
+*/
+
+// ==============================================
+
+// FUNGSI INSERT LAST - SINGLE LINKED LIST
+void insertLast(pointer &first, pointer pBaru) {
+    pointer last;
+    if (first == NULL) {
+        first = pBaru;
+    } else {
+        last = first;
+        while(last->next != NULL) {
+            last = last->next;
+        }
+        last->next = pBaru;
+    }
+}
+
+/*
+VISUALISASI INSERT LAST:
+Sebelum: [A] → [B] → [C] → NULL
+                   ↑
+                  last
+
+Insert [NEW] di last:
+last->next = pBaru;     // [A] → [B] → [C] → [NEW] → NULL
+
+Hasil: [A] → [B] → [C] → [NEW] → NULL
+                           ↑
+                          last
+*/
+
+// ==============================================
+
+// FUNGSI INSERT AFTER - SINGLE LINKED LIST
+void insertAfter(pointer &first, pointer pBaru, pointer pCari) {
+    if (pCari->next == NULL) {
+        insertLast(first, pBaru);
+    } else {
+        pBaru->next = pCari->next;
+        pCari->next = pBaru;
+    }
+}
+
+/*
+VISUALISASI INSERT AFTER:
+Sebelum: [A] → [B] → [C] → NULL
+               ↑
+              pCari
+
+Insert [NEW] setelah [B]:
+pBaru->next = pCari->next;  // [NEW] → [C]
+pCari->next = pBaru;        // [B] → [NEW]
+
+Hasil: [A] → [B] → [NEW] → [C] → NULL
+*/
+
+// ==============================================
+
+// FUNGSI DELETE FIRST - SINGLE LINKED LIST
+void deleteFirst(pointer &first, pointer &pHapus) {
+    if (first == NULL) {
+        pHapus = NULL;
+    } else if (first->next == NULL) {
+        pHapus = first;
+        first = NULL;
+    } else {
+        pHapus = first;
+        first = first->next;
+        pHapus->next = NULL;
+    }
+}
+
+/*
+VISUALISASI DELETE FIRST:
+Sebelum: [A] → [B] → [C] → NULL
+         ↑
+        first
+
+Delete first:
+pHapus = first;         // pHapus = [A]
+first = first->next;    // first = [B]
+
+Hasil: [B] → [C] → NULL   dan   [A] → NULL (siap di-delete)
+         ↑                      ↑
+        first                 pHapus
+*/
+
+// ==============================================
+
+// FUNGSI DELETE LAST - SINGLE LINKED LIST
+void deleteLast(pointer &first, pointer &pHapus) {
+    pointer last, prelast;
+    if (first == NULL) {
+        pHapus = NULL;
+    } else if (first->next == NULL) {
+        pHapus = first;
+        first = NULL;
+    } else {
+        last = first;
+        prelast = NULL;
+        while (last->next != NULL) {
+            prelast = last;
+            last = last->next;
+        }
+        pHapus = last;
+        prelast->next = NULL;
+    }
+}
+
+/*
+VISUALISASI DELETE LAST:
+Sebelum: [A] → [B] → [C] → NULL
+                   ↑     ↑
+               prelast  last
+
+Delete last:
+pHapus = last;           // pHapus = [C]
+prelast->next = NULL;    // [B] → NULL
+
+Hasil: [A] → [B] → NULL   dan   [C] → NULL (siap di-delete)
+                           ↑
+                         pHapus
+*/
+
+// ==============================================
+
+// FUNGSI DELETE AFTER - SINGLE LINKED LIST
+void deleteAfter(pointer &first, pointer pCari, pointer &pHapus) {
+    if (pCari->next == NULL) {
+        pHapus = NULL;
+    } else {
+        pHapus = pCari->next;
+        pCari->next = pHapus->next;
+        pHapus->next = NULL;
+    }
+}
+
+/*
+VISUALISASI DELETE AFTER:
+Sebelum: [A] → [B] → [C] → NULL
+               ↑     ↑
+             pCari pHapus
+
+Delete setelah [A]:
+pHapus = pCari->next;       // pHapus = [B]
+pCari->next = pHapus->next; // [A] → [C]
+
+Hasil: [A] → [C] → NULL   dan   [B] → NULL (siap di-delete)
+                           ↑
+                         pHapus
+*/
+
+// ==============================================
+
+// FUNGSI TRAVERSAL - SINGLE LINKED LIST
+void traversal(pointer first) {
+    pointer pBantu;
+    if (first == NULL) {
+        cout << "Linked list kosong!" << endl;
+    } else {
+        pBantu = first;
+        do {
+            cout << pBantu->data << endl;
+            pBantu = pBantu->next;
+        } while (pBantu != NULL);
+    }
+}
+
+/*
+VISUALISASI TRAVERSAL:
+List: [A] → [B] → [C] → NULL
+       ↑
+     pBantu
+
+Iterasi 1: pBantu = [A] → tampilkan A → pBantu = [A]->next = [B]
+Iterasi 2: pBantu = [B] → tampilkan B → pBantu = [B]->next = [C]
+Iterasi 3: pBantu = [C] → tampilkan C → pBantu = [C]->next = NULL → STOP
+*/
+```
+
+Insert pattern
+```cpp
+// INSERT: selalu sambung NEW node ke target
+newNode->next = targetNode->next;  // atau first
+targetNode->next = newNode;        // atau first = newNode
+```
+
+- Delete pattern
+```cpp
+// DELETE: selalu bypass node yang dihapus
+targetNode->next = nodeToDelete->next;  // atau first = first->next
+nodeToDelete->next = NULL;              // putuskan hubungan
+```
