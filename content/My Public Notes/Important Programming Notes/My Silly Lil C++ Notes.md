@@ -824,3 +824,4 @@ targetNode->next = newNode;        // atau first = newNode
 targetNode->next = nodeToDelete->next;  // atau first = first->next
 nodeToDelete->next = NULL;              // putuskan hubungan
 ```
+
